@@ -1,3 +1,5 @@
+import './../global.css';
+import { Provider } from 'react-redux';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
@@ -5,6 +7,8 @@ import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { store } from './store';
+import { SafeAreaView } from 'react-native';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -19,11 +23,16 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+       <Provider store={store}>
+      <SafeAreaView />
+      <StatusBar translucent backgroundColor="transparent" style="auto" />
+
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(screens)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
-      <StatusBar style="auto" />
+      <StatusBar style="auto" /> </Provider>
     </ThemeProvider>
   );
 }
