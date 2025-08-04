@@ -2,20 +2,21 @@ import { FontAwesome } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
 import {
-    Dimensions,
-    FlatList,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
 } from "react-native";
 import Animated, {
-    FadeInUp,
-    SlideInLeft,
-    SlideOutLeft,
-    useAnimatedStyle,
-    useSharedValue,
-    withTiming,
+  FadeInUp,
+  SlideInLeft,
+  SlideOutLeft,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
 } from "react-native-reanimated";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
@@ -45,32 +46,37 @@ export default function Home() {
     },
   ];
 
-//   const toggleMenu = () => setMenuVisible(!menuVisible);
+  //   const toggleMenu = () => setMenuVisible(!menuVisible);
 
-const rotation = useSharedValue(0);
+  const rotation = useSharedValue(0);
 
-const animatedIconStyle = useAnimatedStyle(() => ({
-  transform: [{ rotate: `${rotation.value}deg` }],
-}));
+  const animatedIconStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${rotation.value}deg` }],
+  }));
 
-const toggleMenu = () => {
-  rotation.value = withTiming(menuVisible ? 0 : 180, { duration: 300 });
-  setMenuVisible(!menuVisible);
-};
-
+  const toggleMenu = () => {
+    rotation.value = withTiming(menuVisible ? 0 : 180, { duration: 300 });
+    setMenuVisible(!menuVisible);
+  };
 
   return (
-    <View style={styles.container}>
+    <TouchableWithoutFeedback
+      style={styles.container}
+      onPress={() => menuVisible && setMenuVisible(false)}>
       <LinearGradient
         colors={["#fce4ec", "#f8bbd0", "#f48fb1"]}
         style={styles.gradient}>
         <View style={styles.header}>
           <Text style={styles.appName}>Flip The Switch 💡</Text>
           <TouchableOpacity onPress={toggleMenu}>
-  <Animated.View style={animatedIconStyle}>
-    <FontAwesome name={menuVisible ? 'angle-left' : 'bars'} size={24} color="#d81b60" />
-  </Animated.View>
-</TouchableOpacity>
+            <Animated.View style={animatedIconStyle}>
+              <FontAwesome
+                name={menuVisible ? "angle-left" : "bars"}
+                size={24}
+                color="#d81b60"
+              />
+            </Animated.View>
+          </TouchableOpacity>
 
           {/* <TouchableOpacity onPress={toggleMenu}>
             <FontAwesome
@@ -118,7 +124,7 @@ const toggleMenu = () => {
           )}
         />
       </LinearGradient>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
