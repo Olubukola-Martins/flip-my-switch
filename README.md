@@ -1,4 +1,3 @@
-Here’s a **quick README** for your chic-themed fintech app, **Flip The Switch 💡**, summarizing the technologies used, features, and setup instructions:
 
 ---
 
@@ -90,6 +89,3 @@ utility
   helperFn.ts
 ```
 
----
-
-Would you like me to generate a `README.md` file for download or help you publish this to GitHub or Expo?
