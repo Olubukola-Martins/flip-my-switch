@@ -2,8 +2,8 @@ import * as LocalAuthentication from 'expo-local-authentication';
 import React, { useState } from 'react';
 import { Button, Text, TextInput, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../store';
-import { checkUser, createUser } from '../store/userSlice';
+import { AppDispatch, RootState } from './store';
+import { checkUser, createUser } from './store/userSlice';
 import { router } from 'expo-router';
 
 export default function Login() {
@@ -38,7 +38,7 @@ export default function Login() {
       if (user?.password === password) {
         resetFields();
         alert('Login successful! 🎉');
-        router.push('Home' as never);
+        router.push('home' as never);
       } else {
         alert('Wrong password!');
       }
@@ -68,7 +68,7 @@ export default function Login() {
     const { success } = await LocalAuthentication.authenticateAsync();
     if (success) {
       alert('Biometric login successful!');
-      router.push('Home' as never);
+      router.push('home' as never);
     }
   };
 

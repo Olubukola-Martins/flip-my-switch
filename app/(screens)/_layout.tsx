@@ -9,9 +9,7 @@ export default function ScreensLayout() {
       <SafeAreaView />
       <StatusBar translucent backgroundColor="transparent" style="auto" />
       <Stack>
-        <Stack.Screen name="BiometricSetup" options={{ headerShown: false }} />
-        {/* <Stack.Screen name="(screens)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" /> */}
+        {/* <Stack.Screen name="BiometricSetup" options={{ headerShown: false }} /> */}
       </Stack>
     </>
   );

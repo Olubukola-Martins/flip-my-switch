@@ -28,6 +28,8 @@ export default function RootLayout() {
       <StatusBar translucent backgroundColor="transparent" style="auto" />
 
       <Stack>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="BiometricSetup" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="(screens)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />

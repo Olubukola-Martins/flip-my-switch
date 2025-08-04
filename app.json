@@ -10,7 +10,10 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-       "jsEngine": "hermes"
+       "jsEngine": "hermes",
+        "infoPlist": {
+        "NSFaceIDUsageDescription": "Enable Face ID to log in faster"
+      }
     },
     "android": {
        "jsEngine": "hermes",
