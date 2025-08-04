@@ -24,6 +24,7 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
        <Provider store={store}>
+        
       <SafeAreaView />
       <StatusBar translucent backgroundColor="transparent" style="auto" />
 

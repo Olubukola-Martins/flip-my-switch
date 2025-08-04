@@ -1,15 +1,20 @@
-import * as LocalAuthentication from 'expo-local-authentication';
 import React, { useState } from 'react';
-import { Button, Text, TextInput, View } from 'react-native';
+import {  Text, TextInput, TouchableOpacity, ActivityIndicator, Dimensions, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from './store';
 import { checkUser, createUser } from './store/userSlice';
 import { router } from 'expo-router';
+import * as LocalAuthentication from 'expo-local-authentication';
+import Animated, { FadeInUp } from 'react-native-reanimated';
+import LottieView from 'lottie-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+
+const { width } = Dimensions.get('window');
 
 export default function Login() {
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [name, setName] = useState<string>('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const dispatch = useDispatch<AppDispatch>();
   const { user, isNewUser, loading } = useSelector((state: RootState) => state.user);
 
@@ -25,7 +30,6 @@ export default function Login() {
         const result = await dispatch(
           createUser({ name, username, password, useBiometrics: false })
         ).unwrap();
-
         if (result) {
           resetFields();
           alert('Signup successful! 🎉');
@@ -50,7 +54,6 @@ export default function Login() {
       try {
         await dispatch(checkUser(username));
       } catch (error: any) {
-        console.error('User check failed:', error);
         alert('Error checking user: ' + error?.message);
       }
     }
@@ -65,7 +68,12 @@ export default function Login() {
       return;
     }
 
-    const { success } = await LocalAuthentication.authenticateAsync();
+    const { success } = await LocalAuthentication.authenticateAsync({
+      promptMessage: 'Login with Biometrics',
+      fallbackLabel: '',
+      disableDeviceFallback: true,
+    });
+
     if (success) {
       alert('Biometric login successful!');
       router.push('home' as never);
@@ -73,116 +81,79 @@ export default function Login() {
   };
 
   return (
-    <View>
-      {!user && isNewUser ? (
-        <TextInput placeholder="Name" value={name} onChangeText={setName} />
-      ) : (
-        user && <Text>Welcome back, {user.name}!</Text>
-      )}
+    <LinearGradient
+      colors={['#fce4ec', '#f8bbd0', '#f48fb1']}
+      className="flex flex-1 justify-center items-center px-6 "
+        style={{ ...StyleSheet.absoluteFillObject }}
+      
+    >
 
-      <TextInput
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-        onBlur={handleCheckUser}
-      />
-      <TextInput
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
+      <LottieView
+        source={require('./../assets/animations/login.json')}
+        autoPlay
+        loop
+        style={{ width: 140, height: 140, marginLeft:'auto',marginRight:'auto', marginBottom: 20, marginTop: 40 }} 
       />
 
-      {user?.useBiometrics && (
-        <Button title="Login with Face ID / Touch ID" onPress={handleBiometricLogin} />
-      )}
+      <Animated.View entering={FadeInUp.duration(800)} className="w-full max-w-md bg-white/30 p-6 rounded-3xl shadow-lg ">
+        <Text className="text-center text-3xl font-bold text-pink-800 mb-4">Flip The Switch 💡</Text>
+        <Text className="text-center text-lg text-pink-700 mb-6">
+          {isNewUser ? 'Create your account' : 'Welcome back!'}
+        </Text>
 
-      <Button
-        title={isNewUser ? 'Sign Up' : 'Login'}
-        onPress={handleSubmit}
-        disabled={loading}
-      />
-    </View>
+        {isNewUser && (
+          <TextInput
+            placeholder="Full Name"
+            placeholderTextColor="#a1a1aa"
+            value={name}
+            onChangeText={setName}
+            className="bg-white/60 text-pink-900 px-4 py-3 rounded-xl mb-4"
+          />
+        )}
+
+        <TextInput
+          placeholder="Username"
+          placeholderTextColor="#a1a1aa"
+          value={username}
+          onChangeText={setUsername}
+          onBlur={handleCheckUser}
+          className="bg-white/60 text-pink-900 px-4 py-3 rounded-xl mb-4"
+        />
+
+        <TextInput
+          placeholder="Password"
+          placeholderTextColor="#a1a1aa"
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+          className="bg-white/60 text-pink-900 px-4 py-3 rounded-xl mb-6"
+        />
+
+        {user?.useBiometrics && (
+          <TouchableOpacity
+            onPress={handleBiometricLogin}
+            className="bg-pink-600 py-3 rounded-xl mb-4"
+          >
+            <Text className="text-white text-center font-semibold">Login with Biometrics</Text>
+          </TouchableOpacity>
+        )}
+
+        <TouchableOpacity
+          onPress={handleSubmit}
+          disabled={loading}
+          className={`py-3 rounded-xl ${loading ? 'bg-gray-400' : 'bg-pink-700'}`}
+        >
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text className="text-white text-center font-semibold">
+              {isNewUser ? 'Sign Up' : 'Login'}
+            </Text>
+          )}
+        </TouchableOpacity>
+      </Animated.View>
+    </LinearGradient>
   );
 }
 
-// import { Image } from "expo-image";
-// import { Platform, StyleSheet, Text } from "react-native";
 
-// import { HelloWave } from "@/components/HelloWave";
-// import ParallaxScrollView from "@/components/ParallaxScrollView";
-// import { ThemedText } from "@/components/ThemedText";
-// import { ThemedView } from "@/components/ThemedView";
-
-// export default function HomeScreen() {
-//   return (
-//     <ParallaxScrollView
-//       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
-//       headerImage={
-//         <Image
-//           source={require("@/assets/images/partial-react-logo.png")}
-//           style={styles.reactLogo}
-//         />
-//       }>
-//       <Text className=" text-red-500 text-2xl font-bold">I am new Here</Text>
-//       <ThemedView style={styles.titleContainer}>
-//         <ThemedText type="title">Welcome Adun!</ThemedText>
-//         <HelloWave />
-//       </ThemedView>
-//       <ThemedView style={styles.stepContainer}>
-//         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-//         <ThemedText>
-//           Edit
-//           <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText>
-//           to see changes. Press
-//           <ThemedText type="defaultSemiBold">
-//             {Platform.select({
-//               ios: "cmd + d",
-//               android: "cmd + m",
-//               web: "F12",
-//             })}
-//           </ThemedText>
-//           to open developer tools.
-//         </ThemedText>
-//       </ThemedView>
-//       <ThemedView style={styles.stepContainer}>
-//         <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-//         <ThemedText>
-//           {`Tap the Explore tab to learn more about what's included in this starter app.`}
-//         </ThemedText>
-//       </ThemedView>
-//       <ThemedView style={styles.stepContainer}>
-//         <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-//         <ThemedText>
-//           {`When you're ready, run `}
-//           <ThemedText type="defaultSemiBold">
-//             npm run reset-project
-//           </ThemedText>
-//           to get a fresh <ThemedText type="defaultSemiBold">app</ThemedText>
-//           directory. This will move the current
-//           <ThemedText type="defaultSemiBold">app</ThemedText> to
-//           <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-//         </ThemedText>
-//       </ThemedView>
-//     </ParallaxScrollView>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   titleContainer: {
-//     flexDirection: "row",
-//     alignItems: "center",
-//     gap: 8,
-//   },
-//   stepContainer: {
-//     gap: 8,
-//     marginBottom: 8,
-//   },
-//   reactLogo: {
-//     height: 178,
-//     width: 290,
-//     bottom: 0,
-//     left: 0,
-//     position: "absolute",
-//   },
-// });
