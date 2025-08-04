@@ -64,7 +64,7 @@ A beautifully styled, swipeable fintech app built with React Native and Expo, de
 - Uses MockAPI.io to simulate:
   - User login
   - Account data (current & savings)
-- API endpoint: `https://your-mockapi-url.com/switch/signin`
+- API endpoint: `https://688f6662f21ab1769f890f6f.mockapi.io/switch/signin`
 
 ---
 
@@ -81,8 +81,8 @@ A beautifully styled, swipeable fintech app built with React Native and Expo, de
 ```
 /assets
   /animations
-/components
-/screens
+/app
+  /screens
 /store
   userSlice.ts
   store.ts
